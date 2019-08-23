@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "916411075539",
+    "firebase_url": "https://data-monitoring-mahasisw-3d44e.firebaseio.com",
+    "project_id": "data-monitoring-mahasisw-3d44e",
+    "storage_bucket": "data-monitoring-mahasisw-3d44e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:916411075539:android:f67393e367753ecc",
+        "android_client_info": {
+          "package_name": "com.example.data_monitoring_mahasiswa"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "916411075539-fmk4apufuph6sv04p1l96epcncmg9jce.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCkYF0wbQIloefFoxRsPvYixqJCmzZ5CNE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "916411075539-fmk4apufuph6sv04p1l96epcncmg9jce.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
