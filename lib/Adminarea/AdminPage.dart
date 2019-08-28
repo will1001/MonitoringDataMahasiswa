@@ -113,7 +113,7 @@ String _dataku;
              splashColor: Colors.blue,
              onPressed: (){
                 Navigator.of(context).push(
-                  MaterialPageRoute(builder: (c) => Datanilai())
+                  MaterialPageRoute(builder: (c) => DataNilai())
                 );
              },
            ),

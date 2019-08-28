@@ -3,11 +3,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 
 class FormEditDataNilai extends StatefulWidget {
-  FormEditDataNilai({this.nama,this.nim,this.thn_masuk,this.ket,this.index});
-  final String nama;
+  FormEditDataNilai({this.kelas,this.kode_mk,this.nilai,this.nim,this.thn_ajar,this.index});
+  final String kelas;
+  final String kode_mk;
+  final String nilai;
   final String nim;
-  final String thn_masuk;
-  final String ket;
+  final String thn_ajar;
   final index;
   @override
   _FormEditDataNilaiState createState() => _FormEditDataNilaiState();
@@ -16,21 +17,23 @@ class FormEditDataNilai extends StatefulWidget {
 class _FormEditDataNilaiState extends State<FormEditDataNilai> {
 
 
- String _nama,_nim,_thn_masuk,_ket;
- TextEditingController controllernama;
+ String _kelas,_kode_mk,_nilai,_nim,_thn_ajar;
+ TextEditingController controllerkelas;
+ TextEditingController controllerkode_mk;
+ TextEditingController controllernilai;
  TextEditingController controllernim;
- TextEditingController controllerthn_masuk;
- TextEditingController controllerket;
+ TextEditingController controllerthn_ajar;
 
   void _editdata() {
     Firestore.instance.runTransaction((Transaction transaction)async{
       DocumentSnapshot snapshot = 
       await transaction.get(widget.index);
       await transaction.update(snapshot.reference,{
-        "nama":_nama,
+        "kelas":_kelas,
+        "kode_mk":_kode_mk,
+        "nilai":_nilai,
         "nim":_nim,
-        "thn_masuk":_thn_masuk,
-        "ket":_ket,
+        "thn_ajar":_thn_ajar,
       });
     });
     Navigator.pop(context);
@@ -40,36 +43,63 @@ class _FormEditDataNilaiState extends State<FormEditDataNilai> {
   @override
   void initState(){
     super.initState();
-    controllernama = TextEditingController(text: widget.nama);
+    controllerkelas = TextEditingController(text: widget.kelas);
+    controllerkode_mk = TextEditingController(text: widget.kode_mk);
+    controllernilai = TextEditingController(text: widget.nilai);
     controllernim = TextEditingController(text: widget.nim);
-    controllerthn_masuk = TextEditingController(text: widget.thn_masuk);
-    controllerket = TextEditingController(text: widget.ket);
-    _nama = widget.nama;
+    controllerthn_ajar = TextEditingController(text: widget.thn_ajar);
+    _kelas = widget.kelas;
+    _kode_mk = widget.kode_mk;
+    _nilai = widget.nilai;
     _nim = widget.nim;
-    _thn_masuk = widget.thn_masuk;
-    _ket = widget.ket;
+    _thn_ajar = widget.thn_ajar;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Data Mahasiswa'),
+        title: Text('Data Nilai'),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
            TextField(
-             controller: controllernama,
+             controller: controllerkelas,
              onChanged: (String str){
                setState(() {
-                 _nama=str;
+                 _kelas=str;
                });
              },
              decoration: InputDecoration(
                icon: Icon(Icons.person),
-               hintText: "nama"
+               hintText: "Kelas"
+             ),
+           ),
+           TextField(
+             controller: controllerkode_mk,
+             onChanged: (String str){
+               setState(() {
+                 _kode_mk=str;
+               });
+             },
+             
+             decoration: InputDecoration(
+               icon: Icon(Icons.format_list_numbered_rtl),
+               hintText: "KODE MK"
+             ),
+           ),
+           TextField(
+             controller: controllernilai,
+             onChanged: (String str){
+               setState(() {
+                 _nilai=str;
+               });
+             },
+             decoration: InputDecoration(
+               icon: Icon(Icons.event_note),
+               hintText: "NILAI"
              ),
            ),
            TextField(
@@ -79,34 +109,21 @@ class _FormEditDataNilaiState extends State<FormEditDataNilai> {
                  _nim=str;
                });
              },
-             
              decoration: InputDecoration(
-               icon: Icon(Icons.format_list_numbered_rtl),
-               hintText: "nim"
+               icon: Icon(Icons.info_outline),
+               hintText: "NIM"
              ),
            ),
            TextField(
-             controller: controllerthn_masuk,
+             controller: controllerthn_ajar,
              onChanged: (String str){
                setState(() {
-                 _thn_masuk=str;
-               });
-             },
-             decoration: InputDecoration(
-               icon: Icon(Icons.event_note),
-               hintText: "Tahun Masuk"
-             ),
-           ),
-           TextField(
-             controller: controllerket,
-             onChanged: (String str){
-               setState(() {
-                 _ket=str;
+                 _thn_ajar=str;
                });
              },
              decoration: InputDecoration(
                icon: Icon(Icons.info_outline),
-               hintText: "Keterangan"
+               hintText: "Tahun Ajar"
              ),
            ),
            RaisedButton(

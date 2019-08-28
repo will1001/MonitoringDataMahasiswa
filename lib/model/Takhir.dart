@@ -5,6 +5,13 @@ class Takhir{
     getDataTakhir(){
       return Firestore.instance
               .collection('takhir')
-              .getDocuments();
+              .snapshots();
+    }
+
+    getDataTakhirWhereNIM(String nim){
+      return Firestore.instance
+              .collection('takhir')
+              .where("nim", isEqualTo: nim)
+              .snapshots();
     }
 }

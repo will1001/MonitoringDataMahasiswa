@@ -1,16 +1,21 @@
-import 'package:data_monitoring_mahasiswa/Adminarea/DataDetailnilai.dart';
-import 'package:data_monitoring_mahasiswa/model/MataKuliah.dart';
+import 'package:data_monitoring_mahasiswa/Form/FormEditDataNilai.dart';
+import 'package:data_monitoring_mahasiswa/Form/FormTambahDataNilai.dart';
+import 'package:data_monitoring_mahasiswa/model/JalurMasuk.dart';
+import 'package:data_monitoring_mahasiswa/model/Nilai.dart';
+import 'package:data_monitoring_mahasiswa/model/Mahasiswa.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 
-class Datanilai extends StatefulWidget {
+class DataNilai extends StatefulWidget {
   @override
-  _DatanilaiState createState() => _DatanilaiState();
+  _DataNilaiState createState() => _DataNilaiState();
 }
 
-class _DatanilaiState extends State<Datanilai> {
+class _DataNilaiState extends State<DataNilai> {
+  String onchange;
+
   
 @override
   void initState() {
@@ -19,22 +24,37 @@ class _DatanilaiState extends State<Datanilai> {
     
   }  
 
+String _id_sekolah,_keterangan,_nama_sekolah;
 
 String _dataku;
+
+ void _adddata() {
+    Navigator.of(context).push(
+    MaterialPageRoute(builder: (c) => FormTambahDataNilai())
+  );
+  }
 
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Data Nilai'),
+        title: Text('Data Kode Sekolah'),
+        actions: <Widget>[
+          IconButton(
+          icon: Icon(Icons.menu),
+          onPressed: (){
+            
+          },
+        ),
+        ],
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
            StreamBuilder(
-             stream: MataKuliah().getDataMataKuliah(),
+             stream: Nilai().getdatanilai(),
 
              builder: (BuildContext context,AsyncSnapshot<QuerySnapshot> snapshot){
                if(!snapshot.hasData)
@@ -48,6 +68,11 @@ String _dataku;
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _adddata,
+        tooltip: 'Adddata',
+        child: Icon(Icons.add),
+      ), 
     );
   }
   getUID() async {
@@ -76,19 +101,64 @@ class TampilData extends StatelessWidget {
             child: ListView.builder(
                     itemCount: document.length,
                     itemBuilder: (BuildContext context, int i){
-                      String nama_mk = document[i].data["nama_mk"].toString();
+                      String kelas = document[i].data["kelas"].toString();
+                      String kode_mk = document[i].data["kode_mk"].toString();
+                      String nilai = document[i].data["nilai"].toString();
+                      String nim = document[i].data["nim"].toString();
+                      String thn_ajar = document[i].data["thn_ajar"].toString();
+                      
 
-                      return ListTile(
-                        title: Text(nama_mk),
-                        trailing: Icon(Icons.keyboard_arrow_right),
-                        onTap: (){
-                          Navigator.of(context).push(MaterialPageRoute(
-                                builder: (BuildContext context)=> DataDetailnilai(
+
+                      return ExpansionTile(
+                        title: Text(nim),
+                        children: <Widget>[
+                          ListTile(
+                            leading: Text("Kode MK:"),
+                          title: Text(kode_mk),
+                        ),
+                        ListTile(
+                            leading: Text("Niali :"),
+                          title: Text(nilai),
+                        ),
+                        ListTile(
+                            leading: Text("Tahun Ajar :"),
+                          title: Text(thn_ajar),
+                        ),
+                        ListTile(
+                            leading: Text("Kelas :"),
+                          title: Text(kelas),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: <Widget>[
+                            IconButton(
+                            icon: Icon(Icons.edit),
+                            onPressed: (){
+                              Navigator.of(context).push(MaterialPageRoute(
+                                builder: (BuildContext context)=> FormEditDataNilai(
+                                  kelas: document[i].data['kelas'],
                                   kode_mk: document[i].data['kode_mk'],
+                                  nilai: document[i].data['nilai'],
+                                  nim: document[i].data['nim'],
+                                  thn_ajar: document[i].data['thn_ajar'],
                                   index:document[i].reference,
                                 )
                               ));
-                        },
+                            },
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.delete),
+                            onPressed: (){
+                              Firestore.instance.runTransaction((Transaction transaction)async{
+                                DocumentSnapshot snapshot = 
+                                await transaction.get(document[i].reference);
+                                await transaction.delete(snapshot.reference);
+                              });
+                            },
+                          )
+                          ],
+                        )
+                        ],
                       );
                     },
                   ),
