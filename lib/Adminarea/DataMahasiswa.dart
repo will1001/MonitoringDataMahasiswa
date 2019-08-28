@@ -1,5 +1,7 @@
 import 'package:data_monitoring_mahasiswa/Form/FormEditDataMahasiswa.dart';
 import 'package:data_monitoring_mahasiswa/Form/FormTambahDataMahasiswa.dart';
+import 'package:data_monitoring_mahasiswa/model/JalurMasuk.dart';
+import 'package:data_monitoring_mahasiswa/model/Mahasiswa.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -11,7 +13,7 @@ class DataMahasiswa extends StatefulWidget {
 }
 
 class _DataMahasiswaState extends State<DataMahasiswa> {
-  String onchange = "oke";
+  String onchange;
 
   
 @override
@@ -31,37 +33,27 @@ String _dataku;
   );
   }
 
-  void _editdata() {
-    print(Firestore.instance.collection('task').snapshots());
-  }
-  void _deletedata() {
-    print(Firestore.instance.collection('task').snapshots());
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Data Mahasiswa'),
+        actions: <Widget>[
+          IconButton(
+          icon: Icon(Icons.menu),
+          onPressed: (){
+            
+          },
+        ),
+        ],
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            TextField(
-              onChanged: (text) {
-                setState(() {
-                  onchange = text;
-                });
-              },
-            ),
-            Text('$onchange'),
            StreamBuilder(
-             stream: Firestore.instance
-             .collection("mahasiswa")
-            //  .where("nama",isEqualTo: '$onchange').o
-            .orderBy("$onchange")
-             .snapshots(),
+             stream: Mahasiswa().getDataMahasiswa(),
 
              builder: (BuildContext context,AsyncSnapshot<QuerySnapshot> snapshot){
                if(!snapshot.hasData)
@@ -115,51 +107,68 @@ class TampilData extends StatelessWidget {
                       
 
 
-                      return ExpansionTile(
-                        title: Text(nama),
-                        children: <Widget>[
-                          ListTile(
-                            leading: Text("NIM :"),
-                          title: Text(nim),
-                        ),
-                          ListTile(
-                            leading: Text("Tahun Masuk:"),
-                          title: Text(thn_masuk),
-                        ),
-                          ListTile(
-                            leading: Text("Ket :"),
-                          title: Text(ket),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: <Widget>[
-                            IconButton(
-                            icon: Icon(Icons.edit),
-                            onPressed: (){
-                              Navigator.of(context).push(MaterialPageRoute(
-                                builder: (BuildContext context)=> FormEditDataMahasiswa(
-                                  nama: document[i].data['nama'],
-                                  nim: document[i].data['nim'],
-                                  thn_masuk: document[i].data['thn_masuk'],
-                                  ket: document[i].data['ket'],
-                                  index:document[i].reference,
-                                )
-                              ));
-                            },
+                      return StreamBuilder(
+                        stream: JalurMasuk().getDataJalurMasukWhereNIM(nim),
+                        builder: (BuildContext context,
+                        AsyncSnapshot<QuerySnapshot> snapshot) {
+                           if (!snapshot.hasData)
+                        return new Container(
+                          child: Center(
+                            child: CircularProgressIndicator(),
                           ),
-                          IconButton(
-                            icon: Icon(Icons.delete),
-                            onPressed: (){
-                              Firestore.instance.runTransaction((Transaction transaction)async{
-                                DocumentSnapshot snapshot = 
-                                await transaction.get(document[i].reference);
-                                await transaction.delete(snapshot.reference);
-                              });
-                            },
-                          )
-                          ],
-                        )
-                        ],
+                        );
+                      List<DocumentSnapshot> jalur = snapshot.data.documents;
+                          return ExpansionTile(
+                            title: Text(nama),
+                            children: <Widget>[
+                              ListTile(
+                                leading: Text("NIM :"),
+                              title: Text(nim),
+                            ),
+                              ListTile(
+                                leading: Text("Tahun Masuk:"),
+                              title: Text(thn_masuk),
+                            ),
+                              ListTile(
+                                leading: Text("Ket :"),
+                              title: Text(ket),
+                            ),
+                              ListTile(
+                                leading: Text("Jalur :"),
+                              title: Text(jalur[0].data["jalur"].toString()),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: <Widget>[
+                                IconButton(
+                                icon: Icon(Icons.edit),
+                                onPressed: (){
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (BuildContext context)=> FormEditDataMahasiswa(
+                                      nama: document[i].data['nama'],
+                                      nim: document[i].data['nim'],
+                                      thn_masuk: document[i].data['thn_masuk'],
+                                      ket: document[i].data['ket'],
+                                      index:document[i].reference,
+                                    )
+                                  ));
+                                },
+                              ),
+                              IconButton(
+                                icon: Icon(Icons.delete),
+                                onPressed: (){
+                                  Firestore.instance.runTransaction((Transaction transaction)async{
+                                    DocumentSnapshot snapshot = 
+                                    await transaction.get(document[i].reference);
+                                    await transaction.delete(snapshot.reference);
+                                  });
+                                },
+                              )
+                              ],
+                            )
+                            ],
+                          );
+                        }
                       );
                     },
                   ),

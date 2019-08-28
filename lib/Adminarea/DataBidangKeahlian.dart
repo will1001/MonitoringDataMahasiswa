@@ -1,17 +1,19 @@
-import 'package:data_monitoring_mahasiswa/Form/FormEditDataMataKuliah.dart';
-import 'package:data_monitoring_mahasiswa/Form/FormTambahDataMataKuliah.dart';
-import 'package:data_monitoring_mahasiswa/model/MataKuliah.dart';
+import 'package:data_monitoring_mahasiswa/Form/FormEditDataBidangKeahlian.dart';
+import 'package:data_monitoring_mahasiswa/Form/FormTambahDataBidangKeahlian.dart';
+import 'package:data_monitoring_mahasiswa/model/BidangKeahlian.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 
-class Datamatakuliah extends StatefulWidget {
+class DataBidangKeahlian extends StatefulWidget {
   @override
-  _DatamatakuliahState createState() => _DatamatakuliahState();
+  _DataBidangKeahlianState createState() => _DataBidangKeahlianState();
 }
 
-class _DatamatakuliahState extends State<Datamatakuliah> {
+class _DataBidangKeahlianState extends State<DataBidangKeahlian> {
+  String onchange;
+
   
 @override
   void initState() {
@@ -20,27 +22,37 @@ class _DatamatakuliahState extends State<Datamatakuliah> {
     
   }  
 
+String _keterangan,_kode_bk,_nama_bk;
 
 String _dataku;
 
  void _adddata() {
     Navigator.of(context).push(
-    MaterialPageRoute(builder: (c) => FormTambahDataMataKuliah())
+    MaterialPageRoute(builder: (c) => FormTambahDataBidangKeahlian())
   );
   }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Data Mata Kuliah'),
+        title: Text('Data Bidang Keahlian'),
+        actions: <Widget>[
+          IconButton(
+          icon: Icon(Icons.menu),
+          onPressed: (){
+            
+          },
+        ),
+        ],
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
            StreamBuilder(
-             stream: MataKuliah().getDataMataKuliah(),
+             stream: BidangKeahlian().getDataBidangKeahlian(),
 
              builder: (BuildContext context,AsyncSnapshot<QuerySnapshot> snapshot){
                if(!snapshot.hasData)
@@ -87,42 +99,21 @@ class TampilData extends StatelessWidget {
             child: ListView.builder(
                     itemCount: document.length,
                     itemBuilder: (BuildContext context, int i){
-                      String kode_bk = document[i].data["kode_bk"].toString();
-                      String kode_mk = document[i].data["kode_mk"].toString();
-                      String nama_mk = document[i].data["nama_mk"].toString();
-                      String semester = document[i].data["semester"].toString();
-                      String sifat = document[i].data["sifat"].toString();
-                      String sks = document[i].data["sks"].toString();
                       String keterangan = document[i].data["keterangan"].toString();
-                   
+                      String kode_bk = document[i].data["kode_bk"].toString();
+                      String nama_bk = document[i].data["nama_bk"].toString();
                       
 
 
                       return ExpansionTile(
-                        title: Text(nama_mk),
+                        title: Text(nama_bk),
                         children: <Widget>[
                           ListTile(
-                            leading: Text("kode_bk :"),
+                            leading: Text("Kode BK :"),
                           title: Text(kode_bk),
                         ),
                           ListTile(
-                            leading: Text("kode_mk:"),
-                          title: Text(kode_mk),
-                        ),
-                          ListTile(
-                            leading: Text("semester:"),
-                          title: Text(semester),
-                        ),
-                          ListTile(
-                            leading: Text("sifat:"),
-                          title: Text(sifat),
-                        ),
-                          ListTile(
-                            leading: Text("sks:"),
-                          title: Text(sks),
-                        ),
-                          ListTile(
-                            leading: Text("keterangan:"),
+                            leading: Text("Keterangan:"),
                           title: Text(keterangan),
                         ),
                         Row(
@@ -132,14 +123,10 @@ class TampilData extends StatelessWidget {
                             icon: Icon(Icons.edit),
                             onPressed: (){
                               Navigator.of(context).push(MaterialPageRoute(
-                                builder: (BuildContext context)=> FormEditDataMataKuliah(
-                                  kode_bk: document[i].data['kode_bk'],
-                                  kode_mk: document[i].data['kode_mk'],
-                                  nama_mk: document[i].data['nama_mk'],
-                                  semester: document[i].data['semester'],
-                                  sifat: document[i].data['sifat'],
-                                  sks: document[i].data['sks'],
+                                builder: (BuildContext context)=> FormEditDataBidangKeahlian(
                                   keterangan: document[i].data['keterangan'],
+                                  kode_bk: document[i].data['kode_bk'],
+                                  nama_bk: document[i].data['nama_bk'],
                                   index:document[i].reference,
                                 )
                               ));

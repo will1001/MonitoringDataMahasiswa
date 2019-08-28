@@ -5,6 +5,13 @@ class JalurMasuk{
     getDataJalurMasuk(){
       return Firestore.instance
               .collection('jalur_masuk')
-              .getDocuments();
+              .snapshots();
+    }
+
+    getDataJalurMasukWhereNIM(String nim){
+      return Firestore.instance
+              .collection('jalur_masuk')
+              .where("nim", isEqualTo: nim)
+              .snapshots();
     }
 }

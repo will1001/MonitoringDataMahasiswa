@@ -5,7 +5,7 @@ class Mahasiswa{
     getDataMahasiswa(){
       return Firestore.instance
               .collection('mahasiswa')
-              .getDocuments();
+              .snapshots();
     }
 
 
@@ -13,6 +13,6 @@ class Mahasiswa{
       return Firestore.instance
               .collection('mahasiswa')
               .where("nim", isEqualTo: nim)
-              .getDocuments();
+              .snapshots();
     }
 }

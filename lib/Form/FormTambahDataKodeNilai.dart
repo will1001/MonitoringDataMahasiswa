@@ -2,30 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 
-class FormTambahDataMahasiswa extends StatefulWidget {
-  FormTambahDataMahasiswa({this.nama,this.nim,this.thn_masuk,this.ket,this.index});
-  final String nama;
-  final String nim;
-  final String thn_masuk;
-  final String ket;
+class FormTambahDataKodeNilai extends StatefulWidget {
+  FormTambahDataKodeNilai({this.angka,this.huruf,this.keterangan,this.index});
+  final String angka;
+  final String huruf;
+  final String keterangan;
   final index;
   @override
-  _FormTambahDataMahasiswaState createState() => _FormTambahDataMahasiswaState();
+  _FormTambahDataKodeNilaiState createState() => _FormTambahDataKodeNilaiState();
 }
 
-class _FormTambahDataMahasiswaState extends State<FormTambahDataMahasiswa> {
+class _FormTambahDataKodeNilaiState extends State<FormTambahDataKodeNilai> {
 
 
- String _nama,_nim,_thn_masuk,_ket;
+ String _angka,_huruf,_keterangan;
 
  void _adddata() {
     Firestore.instance.runTransaction((Transaction transsaction) async {
-      CollectionReference reference = Firestore.instance.collection('mahasiswa');
+      CollectionReference reference = Firestore.instance.collection('kode_nilai');
       await reference.add({
-        "nama" : _nama,
-        "nim"  : _nim,
-        "thn_masuk"  : _thn_masuk,
-        "ket"  : _ket,
+        "angka" : _angka,
+        "huruf"  : _huruf,
+        "keterangan"  : _keterangan,
       });
     });
   }
@@ -36,7 +34,7 @@ class _FormTambahDataMahasiswaState extends State<FormTambahDataMahasiswa> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Data Mahasiswa'),
+        title: Text('Data Kode Nilai'),
       ),
       body: Center(
         child: Column(
@@ -45,48 +43,38 @@ class _FormTambahDataMahasiswaState extends State<FormTambahDataMahasiswa> {
            TextField(
              onChanged: (String str){
                setState(() {
-                 _nama=str;
+                 _angka=str;
                });
              },
              decoration: InputDecoration(
                icon: Icon(Icons.person),
-               hintText: "nama"
+               hintText: "Angka"
              ),
            ),
            TextField(
              onChanged: (String str){
                setState(() {
-                 _nim=str;
+                 _huruf=str;
+               });
+             },
+             decoration: InputDecoration(
+               icon: Icon(Icons.person),
+               hintText: "Huruf"
+             ),
+           ),
+           TextField(
+             onChanged: (String str){
+               setState(() {
+                 _keterangan=str;
                });
              },
              
              decoration: InputDecoration(
                icon: Icon(Icons.format_list_numbered_rtl),
-               hintText: "nim"
-             ),
-           ),
-           TextField(
-             onChanged: (String str){
-               setState(() {
-                 _thn_masuk=str;
-               });
-             },
-             decoration: InputDecoration(
-               icon: Icon(Icons.event_note),
-               hintText: "Tahun Masuk"
-             ),
-           ),
-           TextField(
-             onChanged: (String str){
-               setState(() {
-                 _ket=str;
-               });
-             },
-             decoration: InputDecoration(
-               icon: Icon(Icons.info_outline),
                hintText: "Keterangan"
              ),
            ),
+           
            RaisedButton(
              child: Text('Submit'),
              color: Colors.red,

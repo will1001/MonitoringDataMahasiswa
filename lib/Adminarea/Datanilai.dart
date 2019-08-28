@@ -1,4 +1,5 @@
 import 'package:data_monitoring_mahasiswa/Adminarea/DataDetailnilai.dart';
+import 'package:data_monitoring_mahasiswa/model/MataKuliah.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -33,9 +34,7 @@ String _dataku;
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
            StreamBuilder(
-             stream: Firestore.instance
-             .collection("matakuliah")
-             .snapshots(),
+             stream: MataKuliah().getDataMataKuliah(),
 
              builder: (BuildContext context,AsyncSnapshot<QuerySnapshot> snapshot){
                if(!snapshot.hasData)

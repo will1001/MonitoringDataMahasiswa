@@ -1,5 +1,6 @@
 import 'package:data_monitoring_mahasiswa/Form/FormEditDataDosen.dart';
 import 'package:data_monitoring_mahasiswa/Form/FormTambahDataDosen.dart';
+import 'package:data_monitoring_mahasiswa/model/Dosen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -39,9 +40,7 @@ String _dataku;
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
            StreamBuilder(
-             stream: Firestore.instance
-             .collection("dosen")
-             .snapshots(),
+             stream: Dosen().getDataDosen(),
 
              builder: (BuildContext context,AsyncSnapshot<QuerySnapshot> snapshot){
                if(!snapshot.hasData)

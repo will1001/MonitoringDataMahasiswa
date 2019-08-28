@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class KodeNilai{
+class Dosen{
   
-    getDataKodeNilai(){
+    getDataDosen(){
       return Firestore.instance
-              .collection('kode_nilai')
+              .collection('dosen')
               .snapshots();
     }
 }

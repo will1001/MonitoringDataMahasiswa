@@ -5,6 +5,6 @@ class BidangKeahlian{
     getDataBidangKeahlian(){
       return Firestore.instance
               .collection('bkeahlian')
-              .getDocuments();
+              .snapshots();
     }
 }

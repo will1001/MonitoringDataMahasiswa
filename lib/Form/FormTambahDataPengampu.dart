@@ -2,30 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 
-class FormTambahDataMahasiswa extends StatefulWidget {
-  FormTambahDataMahasiswa({this.nama,this.nim,this.thn_masuk,this.ket,this.index});
-  final String nama;
-  final String nim;
-  final String thn_masuk;
-  final String ket;
+class FormTambahDataPengampu extends StatefulWidget {
+  FormTambahDataPengampu({this.id_dosen,this.kelas,this.kode_mk,this.thn_ajar,this.index});
+  final String id_dosen;
+  final String kelas;
+  final String kode_mk;
+  final String thn_ajar;
   final index;
   @override
-  _FormTambahDataMahasiswaState createState() => _FormTambahDataMahasiswaState();
+  _FormTambahDataPengampuState createState() => _FormTambahDataPengampuState();
 }
 
-class _FormTambahDataMahasiswaState extends State<FormTambahDataMahasiswa> {
+class _FormTambahDataPengampuState extends State<FormTambahDataPengampu> {
 
 
- String _nama,_nim,_thn_masuk,_ket;
+ String _id_dosen,_kelas,_kode_mk,_thn_ajar;
 
  void _adddata() {
     Firestore.instance.runTransaction((Transaction transsaction) async {
       CollectionReference reference = Firestore.instance.collection('mahasiswa');
       await reference.add({
-        "nama" : _nama,
-        "nim"  : _nim,
-        "thn_masuk"  : _thn_masuk,
-        "ket"  : _ket,
+        "id_dosen" : _id_dosen,
+        "kelas"  : _kelas,
+        "kode_mk"  : _kode_mk,
+        "thn_ajar"  : _thn_ajar,
       });
     });
   }
@@ -36,7 +36,7 @@ class _FormTambahDataMahasiswaState extends State<FormTambahDataMahasiswa> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Data Mahasiswa'),
+        title: Text('Data Pengampu'),
       ),
       body: Center(
         child: Column(
@@ -45,46 +45,46 @@ class _FormTambahDataMahasiswaState extends State<FormTambahDataMahasiswa> {
            TextField(
              onChanged: (String str){
                setState(() {
-                 _nama=str;
+                 _id_dosen=str;
                });
              },
              decoration: InputDecoration(
                icon: Icon(Icons.person),
-               hintText: "nama"
+               hintText: "Id Dosen"
              ),
            ),
            TextField(
              onChanged: (String str){
                setState(() {
-                 _nim=str;
+                 _kelas=str;
                });
              },
              
              decoration: InputDecoration(
                icon: Icon(Icons.format_list_numbered_rtl),
-               hintText: "nim"
+               hintText: "Kelas"
              ),
            ),
            TextField(
              onChanged: (String str){
                setState(() {
-                 _thn_masuk=str;
+                 _kode_mk=str;
                });
              },
              decoration: InputDecoration(
                icon: Icon(Icons.event_note),
-               hintText: "Tahun Masuk"
+               hintText: "Kode MK"
              ),
            ),
            TextField(
              onChanged: (String str){
                setState(() {
-                 _ket=str;
+                 _thn_ajar=str;
                });
              },
              decoration: InputDecoration(
                icon: Icon(Icons.info_outline),
-               hintText: "Keterangan"
+               hintText: "Tahun Ajar"
              ),
            ),
            RaisedButton(

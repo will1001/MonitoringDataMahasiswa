@@ -5,6 +5,6 @@ class KodeSekolah{
     getDataKodeSekolah(){
       return Firestore.instance
               .collection('kode_sekolah')
-              .getDocuments();
+              .snapshots();
     }
 }

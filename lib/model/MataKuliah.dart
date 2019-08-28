@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class KodeNilai{
+class MataKuliah{
   
-    getDataKodeNilai(){
+    getDataMataKuliah(){
       return Firestore.instance
-              .collection('kode_nilai')
+              .collection('matakuliah')
               .snapshots();
     }
 }

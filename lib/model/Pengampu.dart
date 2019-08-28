@@ -5,6 +5,6 @@ class Pengampu{
     getDataPengampu(){
       return Firestore.instance
               .collection('pengampu')
-              .getDocuments();
+              .snapshots();
     }
 }
