@@ -1,6 +1,8 @@
 import 'package:data_monitoring_mahasiswa/Form/FormEditDataNilai.dart';
 import 'package:data_monitoring_mahasiswa/Form/FormTambahDataNilai.dart';
+import 'package:data_monitoring_mahasiswa/model/JalurMasuk.dart';
 import 'package:data_monitoring_mahasiswa/model/Nilai.dart';
+import 'package:data_monitoring_mahasiswa/model/Mahasiswa.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
