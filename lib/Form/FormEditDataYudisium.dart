@@ -2,35 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 
-class FormEditDataPengampu extends StatefulWidget {
-  FormEditDataPengampu({this.id_dosen,this.kelas,this.kode_mk,this.thn_ajar,this.index});
-  final String id_dosen;
-  final String kelas;
-  final String kode_mk;
-  final String thn_ajar;
+class FormEditDataYudisium extends StatefulWidget {
+  FormEditDataYudisium({this.nim,this.tgl_ydsm,this.index});
+  final String nim;
+  final String tgl_ydsm;
   final index;
   @override
-  _FormEditDataPengampuState createState() => _FormEditDataPengampuState();
+  _FormEditDataYudisiumState createState() => _FormEditDataYudisiumState();
 }
 
-class _FormEditDataPengampuState extends State<FormEditDataPengampu> {
+class _FormEditDataYudisiumState extends State<FormEditDataYudisium> {
 
 
- String _id_dosen,_kelas,_kode_mk,_thn_ajar;
- TextEditingController controllerid_dosen;
- TextEditingController controllerkelas;
- TextEditingController controllerkode_mk;
- TextEditingController controllerthn_ajar;
+ String _nim,_tgl_ydsm;
+ TextEditingController controllernim;
+ TextEditingController controllertgl_ydsm;
 
   void _editdata() {
     Firestore.instance.runTransaction((Transaction transaction)async{
       DocumentSnapshot snapshot = 
       await transaction.get(widget.index);
       await transaction.update(snapshot.reference,{
-        "id_dosen":_id_dosen,
-        "kelas":_kelas,
-        "kode_mk":_kode_mk,
-        "thn_ajar":_thn_ajar,
+        "nim":_nim,
+        "tgl_ydsm":_tgl_ydsm,
       });
     });
     Navigator.pop(context);
@@ -40,73 +34,44 @@ class _FormEditDataPengampuState extends State<FormEditDataPengampu> {
   @override
   void initState(){
     super.initState();
-    controllerid_dosen = TextEditingController(text: widget.id_dosen);
-    controllerkelas = TextEditingController(text: widget.kelas);
-    controllerkode_mk = TextEditingController(text: widget.kode_mk);
-    controllerthn_ajar = TextEditingController(text: widget.thn_ajar);
-    _id_dosen = widget.id_dosen;
-    _kelas = widget.kelas;
-    _kode_mk = widget.kode_mk;
-    _thn_ajar = widget.thn_ajar;
+    controllernim = TextEditingController(text: widget.nim);
+    controllertgl_ydsm = TextEditingController(text: widget.tgl_ydsm);
+    _nim = widget.nim;
+    _tgl_ydsm = widget.tgl_ydsm;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Data Pengampu'),
+        title: Text('Data Yudisium'),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
            TextField(
-             controller: controllerid_dosen,
+             controller: controllernim,
              onChanged: (String str){
                setState(() {
-                 _id_dosen=str;
+                 _nim=str;
                });
              },
              decoration: InputDecoration(
                icon: Icon(Icons.person),
-               hintText: "Id Dosen"
+               hintText: "NIM"
              ),
            ),
            TextField(
-             controller: controllerkelas,
+             controller: controllertgl_ydsm,
              onChanged: (String str){
                setState(() {
-                 _kelas=str;
+                 _tgl_ydsm=str;
                });
              },
-             
              decoration: InputDecoration(
                icon: Icon(Icons.format_list_numbered_rtl),
-               hintText: "Kelas"
-             ),
-           ),
-           TextField(
-             controller: controllerkode_mk,
-             onChanged: (String str){
-               setState(() {
-                 _kode_mk=str;
-               });
-             },
-             decoration: InputDecoration(
-               icon: Icon(Icons.event_note),
-               hintText: "Kode MK"
-             ),
-           ),
-           TextField(
-             controller: controllerthn_ajar,
-             onChanged: (String str){
-               setState(() {
-                 _thn_ajar=str;
-               });
-             },
-             decoration: InputDecoration(
-               icon: Icon(Icons.info_outline),
-               hintText: "Tahun Ajar"
+               hintText: "Tanggal Yudisium"
              ),
            ),
            RaisedButton(

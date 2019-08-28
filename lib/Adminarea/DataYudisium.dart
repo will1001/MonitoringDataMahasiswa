@@ -1,17 +1,17 @@
-import 'package:data_monitoring_mahasiswa/Form/FormEditDataPengampu.dart';
-import 'package:data_monitoring_mahasiswa/Form/FormTambahDataPengampu.dart';
-import 'package:data_monitoring_mahasiswa/model/Pengampu.dart';
+import 'package:data_monitoring_mahasiswa/Form/FormEditDataYudisium.dart';
+import 'package:data_monitoring_mahasiswa/Form/FormTambahDataYudisium.dart';
+import 'package:data_monitoring_mahasiswa/model/Yudisium.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 
-class DataPengampu extends StatefulWidget {
+class DataYudisium extends StatefulWidget {
   @override
-  _DataPengampuState createState() => _DataPengampuState();
+  _DataYudisiumState createState() => _DataYudisiumState();
 }
 
-class _DataPengampuState extends State<DataPengampu> {
+class _DataYudisiumState extends State<DataYudisium> {
   
 @override
   void initState() {
@@ -25,7 +25,7 @@ String _dataku;
 
  void _adddata() {
     Navigator.of(context).push(
-    MaterialPageRoute(builder: (c) => FormTambahDataPengampu())
+    MaterialPageRoute(builder: (c) => FormTambahDataYudisium())
   );
   }
 
@@ -33,14 +33,14 @@ String _dataku;
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Data Pengampu'),
+        title: Text('Data Yudisium'),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
            StreamBuilder(
-             stream: Pengampu().getDataPengampu(),
+             stream: Yudisium().getDataYudisium(),
 
              builder: (BuildContext context,AsyncSnapshot<QuerySnapshot> snapshot){
                if(!snapshot.hasData)
@@ -87,28 +87,18 @@ class TampilData extends StatelessWidget {
             child: ListView.builder(
                     itemCount: document.length,
                     itemBuilder: (BuildContext context, int i){
-                      String id_dosen = document[i].data["id_dosen"].toString();
-                      String kelas = document[i].data["kelas"].toString();
-                      String kode_mk = document[i].data["kode_mk"].toString();
-                      String thn_ajar = document[i].data["thn_ajar"].toString();
+                      String nim = document[i].data["nim"].toString();
+                      String tgl_ydsm = document[i].data["tgl_ydsm"].toString();
                    
                       
 
 
                       return ExpansionTile(
-                        title: Text(id_dosen),
+                        title: Text(nim),
                         children: <Widget>[
                           ListTile(
-                            leading: Text("kelas :"),
-                          title: Text(kelas),
-                        ),
-                          ListTile(
-                            leading: Text("kode_mk:"),
-                          title: Text(kode_mk),
-                        ),
-                          ListTile(
-                            leading: Text("thn_ajar:"),
-                          title: Text(thn_ajar),
+                            leading: Text("Tanggal Yudisium :"),
+                          title: Text(tgl_ydsm),
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
@@ -117,11 +107,9 @@ class TampilData extends StatelessWidget {
                             icon: Icon(Icons.edit),
                             onPressed: (){
                               Navigator.of(context).push(MaterialPageRoute(
-                                builder: (BuildContext context)=> FormEditDataPengampu(
-                                  id_dosen: document[i].data['id_dosen'],
-                                  kelas: document[i].data['kelas'],
-                                  kode_mk: document[i].data['kode_mk'],
-                                  thn_ajar: document[i].data['thn_ajar'],
+                                builder: (BuildContext context)=> FormEditDataYudisium(
+                                  nim: document[i].data['nim'],
+                                  tgl_ydsm: document[i].data['tgl_ydsm'],
                                   index:document[i].reference,
                                 )
                               ));

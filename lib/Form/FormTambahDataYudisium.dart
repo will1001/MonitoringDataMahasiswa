@@ -2,30 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 
-class FormTambahDataPengampu extends StatefulWidget {
-  FormTambahDataPengampu({this.id_dosen,this.kelas,this.kode_mk,this.thn_ajar,this.index});
-  final String id_dosen;
-  final String kelas;
-  final String kode_mk;
-  final String thn_ajar;
+class FormTambahDataYudisium extends StatefulWidget {
+  FormTambahDataYudisium({this.nim,this.tgl_ydsm,this.index});
+  final String nim;
+  final String tgl_ydsm;
   final index;
   @override
-  _FormTambahDataPengampuState createState() => _FormTambahDataPengampuState();
+  _FormTambahDataYudisiumState createState() => _FormTambahDataYudisiumState();
 }
 
-class _FormTambahDataPengampuState extends State<FormTambahDataPengampu> {
+class _FormTambahDataYudisiumState extends State<FormTambahDataYudisium> {
 
 
- String _id_dosen,_kelas,_kode_mk,_thn_ajar;
+ String _nim,_tgl_ydsm;
 
  void _adddata() {
     Firestore.instance.runTransaction((Transaction transsaction) async {
-      CollectionReference reference = Firestore.instance.collection('mahasiswa');
+      CollectionReference reference = Firestore.instance.collection('yudisium');
       await reference.add({
-        "id_dosen" : _id_dosen,
-        "kelas"  : _kelas,
-        "kode_mk"  : _kode_mk,
-        "thn_ajar"  : _thn_ajar,
+        "nim" : _nim,
+        "tgl_ydsm"  : _tgl_ydsm,
       });
     });
   }
@@ -36,7 +32,7 @@ class _FormTambahDataPengampuState extends State<FormTambahDataPengampu> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Data Pengampu'),
+        title: Text('Data Yudisium'),
       ),
       body: Center(
         child: Column(
@@ -45,46 +41,24 @@ class _FormTambahDataPengampuState extends State<FormTambahDataPengampu> {
            TextField(
              onChanged: (String str){
                setState(() {
-                 _id_dosen=str;
+                 _nim=str;
                });
              },
              decoration: InputDecoration(
                icon: Icon(Icons.person),
-               hintText: "Id Dosen"
+               hintText: "NIM"
              ),
            ),
            TextField(
              onChanged: (String str){
                setState(() {
-                 _kelas=str;
+                 _tgl_ydsm=str;
                });
              },
              
              decoration: InputDecoration(
                icon: Icon(Icons.format_list_numbered_rtl),
-               hintText: "Kelas"
-             ),
-           ),
-           TextField(
-             onChanged: (String str){
-               setState(() {
-                 _kode_mk=str;
-               });
-             },
-             decoration: InputDecoration(
-               icon: Icon(Icons.event_note),
-               hintText: "Kode MK"
-             ),
-           ),
-           TextField(
-             onChanged: (String str){
-               setState(() {
-                 _thn_ajar=str;
-               });
-             },
-             decoration: InputDecoration(
-               icon: Icon(Icons.info_outline),
-               hintText: "Tahun Ajar"
+               hintText: "Tanggal Yudisium"
              ),
            ),
            RaisedButton(
