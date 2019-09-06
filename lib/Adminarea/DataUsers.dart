@@ -1,19 +1,19 @@
-import 'package:data_monitoring_mahasiswa/Form/FormEditDataNilai.dart';
-import 'package:data_monitoring_mahasiswa/Form/FormTambahDataNilai.dart';
+import 'package:data_monitoring_mahasiswa/Form/FormEditDataUsers.dart';
+import 'package:data_monitoring_mahasiswa/Form/FormTambahDataUsers.dart';
 import 'package:data_monitoring_mahasiswa/model/JalurMasuk.dart';
-import 'package:data_monitoring_mahasiswa/model/Nilai.dart';
+import 'package:data_monitoring_mahasiswa/model/Users.dart';
 import 'package:data_monitoring_mahasiswa/model/Mahasiswa.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 
-class DataNilai extends StatefulWidget {
+class DataUsers extends StatefulWidget {
   @override
-  _DataNilaiState createState() => _DataNilaiState();
+  _DataUsersState createState() => _DataUsersState();
 }
 
-class _DataNilaiState extends State<DataNilai> {
+class _DataUsersState extends State<DataUsers> {
   String onchange;
 
   
@@ -24,13 +24,13 @@ class _DataNilaiState extends State<DataNilai> {
     
   }  
 
-String _id_sekolah,_keterangan,_nama_sekolah;
+String _email,_roles,_username;
 
 String _dataku;
 
  void _adddata() {
     Navigator.of(context).push(
-    MaterialPageRoute(builder: (c) => FormTambahDataNilai())
+    MaterialPageRoute(builder: (c) => FormTambahDataUsers())
   );
   }
 
@@ -39,7 +39,7 @@ String _dataku;
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Data Kode Sekolah'),
+        title: Text('Data Users'),
         actions: <Widget>[
           IconButton(
           icon: Icon(Icons.menu),
@@ -54,7 +54,7 @@ String _dataku;
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
            StreamBuilder(
-             stream: Nilai().getdatanilai(),
+             stream: Users().getDataUsers(),
 
              builder: (BuildContext context,AsyncSnapshot<QuerySnapshot> snapshot){
                if(!snapshot.hasData)
@@ -101,32 +101,22 @@ class TampilData extends StatelessWidget {
             child: ListView.builder(
                     itemCount: document.length,
                     itemBuilder: (BuildContext context, int i){
-                      String kelas = document[i].data["kelas"].toString();
-                      String kode_mk = document[i].data["kode_mk"].toString();
-                      String nilai = document[i].data["nilai"].toString();
-                      String nim = document[i].data["nim"].toString();
-                      String thn_ajar = document[i].data["thn_ajar"].toString();
+                      String email = document[i].data["email"].toString();
+                      String roles = document[i].data["roles"].toString();
+                      String username = document[i].data["username"].toString();
                       
 
 
                       return ExpansionTile(
-                        title: Text(nim),
+                        title: Text(username),
                         children: <Widget>[
                           ListTile(
-                            leading: Text("Kode MK:"),
-                          title: Text(kode_mk),
+                            leading: Text("Status:"),
+                          title: Text(roles),
                         ),
                         ListTile(
-                            leading: Text("Niali :"),
-                          title: Text(nilai),
-                        ),
-                        ListTile(
-                            leading: Text("Tahun Ajar :"),
-                          title: Text(thn_ajar),
-                        ),
-                        ListTile(
-                            leading: Text("Kelas :"),
-                          title: Text(kelas),
+                            leading: Text("email :"),
+                          title: Text(email),
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
@@ -135,12 +125,10 @@ class TampilData extends StatelessWidget {
                             icon: Icon(Icons.edit),
                             onPressed: (){
                               Navigator.of(context).push(MaterialPageRoute(
-                                builder: (BuildContext context)=> FormEditDataNilai(
-                                  kelas: document[i].data['kelas'],
-                                  kode_mk: document[i].data['kode_mk'],
-                                  nilai: document[i].data['nilai'],
-                                  nim: document[i].data['nim'],
-                                  thn_ajar: document[i].data['thn_ajar'],
+                                builder: (BuildContext context)=> FormEditDataUsers(
+                                  email: document[i].data['email'],
+                                  roles: document[i].data['roles'],
+                                  username: document[i].data['username'],
                                   index:document[i].reference,
                                 )
                               ));

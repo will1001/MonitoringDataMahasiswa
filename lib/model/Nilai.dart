@@ -6,4 +6,11 @@ class Nilai{
               .collection('nilai')
               .snapshots();
     }
+    
+   getDataNilaiWhereNIM(String nim){
+      return Firestore.instance
+              .collection('nilai')
+              .where("nim", isEqualTo: nim)
+              .snapshots();
+    }
 }

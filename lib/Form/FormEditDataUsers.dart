@@ -2,35 +2,32 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 
-class FormEditDataPengampu extends StatefulWidget {
-  FormEditDataPengampu({this.id_dosen,this.kelas,this.kode_mk,this.thn_ajar,this.index});
-  final String id_dosen;
-  final String kelas;
-  final String kode_mk;
-  final String thn_ajar;
+class FormEditDataUsers extends StatefulWidget {
+  FormEditDataUsers({this.email,this.roles,this.username,this.index});
+  final String email;
+  final String roles;
+  final String username;
   final index;
   @override
-  _FormEditDataPengampuState createState() => _FormEditDataPengampuState();
+  _FormEditDataUsersState createState() => _FormEditDataUsersState();
 }
 
-class _FormEditDataPengampuState extends State<FormEditDataPengampu> {
+class _FormEditDataUsersState extends State<FormEditDataUsers> {
 
 
- String _id_dosen,_kelas,_kode_mk,_thn_ajar;
- TextEditingController controllerid_dosen;
- TextEditingController controllerkelas;
- TextEditingController controllerkode_mk;
- TextEditingController controllerthn_ajar;
+ String _email,_roles,_username;
+ TextEditingController controlleremail;
+ TextEditingController controllerroles;
+ TextEditingController controllerusername;
 
   void _editdata() {
     Firestore.instance.runTransaction((Transaction transaction)async{
       DocumentSnapshot snapshot = 
       await transaction.get(widget.index);
       await transaction.update(snapshot.reference,{
-        "id_dosen":_id_dosen,
-        "kelas":_kelas,
-        "kode_mk":_kode_mk,
-        "thn_ajar":_thn_ajar,
+        "email":_email,
+        "roles":_roles,
+        "username":_username,
       });
     });
     Navigator.pop(context);
@@ -40,75 +37,62 @@ class _FormEditDataPengampuState extends State<FormEditDataPengampu> {
   @override
   void initState(){
     super.initState();
-    controllerid_dosen = TextEditingController(text: widget.id_dosen);
-    controllerkelas = TextEditingController(text: widget.kelas);
-    controllerkode_mk = TextEditingController(text: widget.kode_mk);
-    controllerthn_ajar = TextEditingController(text: widget.thn_ajar);
-    _id_dosen = widget.id_dosen;
-    _kelas = widget.kelas;
-    _kode_mk = widget.kode_mk;
-    _thn_ajar = widget.thn_ajar;
+    controlleremail = TextEditingController(text: widget.email);
+    controllerroles = TextEditingController(text: widget.roles);
+    controllerusername = TextEditingController(text: widget.username);
+    _email = widget.email;
+    _roles = widget.roles;
+    _username = widget.username;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Data Pengampu'),
+        title: Text('Data Users'),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
            TextField(
-             controller: controllerid_dosen,
+             controller: controlleremail,
              onChanged: (String str){
                setState(() {
-                 _id_dosen=str;
+                 _email=str;
                });
              },
              decoration: InputDecoration(
                icon: Icon(Icons.person),
-               hintText: "Id Dosen"
+               hintText: "Email"
              ),
            ),
            TextField(
-             controller: controllerkelas,
+             controller: controllerroles,
              onChanged: (String str){
                setState(() {
-                 _kelas=str;
+                 _roles=str;
                });
              },
              
              decoration: InputDecoration(
                icon: Icon(Icons.format_list_numbered_rtl),
-               hintText: "Kelas"
+               hintText: "Status"
              ),
            ),
            TextField(
-             controller: controllerkode_mk,
+             controller: controllerusername,
              onChanged: (String str){
                setState(() {
-                 _kode_mk=str;
+                 _username=str;
                });
              },
              decoration: InputDecoration(
                icon: Icon(Icons.event_note),
-               hintText: "Kode MK"
+               hintText: "Username"
              ),
            ),
-           TextField(
-             controller: controllerthn_ajar,
-             onChanged: (String str){
-               setState(() {
-                 _thn_ajar=str;
-               });
-             },
-             decoration: InputDecoration(
-               icon: Icon(Icons.info_outline),
-               hintText: "Tahun Ajar"
-             ),
-           ),
+           
            RaisedButton(
              child: Text('Submit'),
              color: Colors.red,

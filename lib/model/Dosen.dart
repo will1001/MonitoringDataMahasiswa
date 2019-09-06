@@ -7,4 +7,11 @@ class Dosen{
               .collection('dosen')
               .snapshots();
     }
+    
+    getDataDosenWhereIdDosen(String id_dosen){
+      return Firestore.instance
+              .collection('dosen')
+              .where('id_dosen',isEqualTo: id_dosen)
+              .snapshots();
+    }
 }

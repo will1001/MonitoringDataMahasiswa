@@ -5,6 +5,13 @@ class Users{
     getDataUsers(){
       return Firestore.instance
               .collection('users')
-              .getDocuments();
+              .snapshots();
+    }
+    
+    getDataUsersWhereDoc(String username){
+      return Firestore.instance
+              .collection('users')
+              .where("username", isEqualTo: username)
+              .snapshots();
     }
 }

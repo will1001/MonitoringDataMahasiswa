@@ -47,7 +47,7 @@ class _SpalshScreenState extends State<SpalshScreen> {
             //     ),
             // ),
             FadeInImage.memoryNetwork(
-              fadeInDuration: const Duration(seconds: 3),
+              fadeInDuration: const Duration(seconds: 1),
               placeholder: kTransparentImage,
               image: 'https://i1.wp.com/unram.ac.id/wp-content/uploads/2018/04/Logo-Unram-1.png?fit=300%2C225&ssl=1',
             ),

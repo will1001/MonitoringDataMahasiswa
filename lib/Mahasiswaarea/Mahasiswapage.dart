@@ -1,8 +1,13 @@
 import 'package:data_monitoring_mahasiswa/Form/FormEditDataMahasiswa.dart';
+import 'package:data_monitoring_mahasiswa/Login.dart';
+import 'package:data_monitoring_mahasiswa/Mahasiswaarea/DataNilaiMahasiswaPage.dart';
+import 'package:data_monitoring_mahasiswa/Mahasiswaarea/DataSkripsiMahasiswaPage.dart';
+import 'package:data_monitoring_mahasiswa/model/Mahasiswa.dart';
+import 'package:data_monitoring_mahasiswa/model/Takhir.dart';
+import 'package:data_monitoring_mahasiswa/model/Users.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 
 class Mahasiswapage extends StatefulWidget {
   @override
@@ -10,137 +15,139 @@ class Mahasiswapage extends StatefulWidget {
 }
 
 class _MahasiswapageState extends State<Mahasiswapage> {
-  
-@override
+  String _nama, _nim;
+
+  String nim;
+  var datamhs;
+
+  @override
   void initState() {
     super.initState();
     getUID();
-    
-  }  
-
-String _nama,_nim;
-
-String _dataku;
-
-  void _adddata() {
-    Firestore.instance.runTransaction((Transaction transsaction) async {
-      CollectionReference reference = Firestore.instance.collection('task');
-      await reference.add({
-        "nama" : _nama,
-        "nim"  : _nim,
-      });
-    });
-  }
-  
-  void _adddata2() {
-    Firestore.instance.collection('users').document('menWqsBeKuaqlszEPMPStCtSVxM2')
-  .setData({ 'username': 'mahasiswa', 'roles': 'mahasiswa' });
-  }
-
-  void _editdata() {
-    print(Firestore.instance.collection('task').snapshots());
-  }
-  void _deletedata() {
-    print(Firestore.instance.collection('task').snapshots());
+    print('${nim}');
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: Drawer(
+        child: ListView(
+          // Important: Remove any padding from the ListView.
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              child: Icon(
+                Icons.account_circle,
+                size: 120.0,
+                color: Colors.grey[200],
+              ),
+              decoration: BoxDecoration(
+                color: Colors.red,
+              ),
+            ),
+            ListTile(
+              title: Row(
+                children: <Widget>[
+                  Icon(Icons.format_list_numbered),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (c) => DataNilaiMahasiswapage()));
+                    },
+                    child: Text('      Nilai'),
+                  )
+                ],
+              ),
+            ),
+            ListTile(
+              title: Row(
+                children: <Widget>[
+                  Icon(Icons.book),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (c) => DataSkripsiMahasiswapage()));
+                    },
+                    child: Text('      Skripsi'),
+                  )
+                ],
+              ),
+            ),
+            ListTile(
+              title: Row(
+                children: <Widget>[
+                  Icon(Icons.lock_open),
+                  GestureDetector(
+                    onTap: () async{
+                      // await FirebaseAuth.instance.signOut();
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (c) => Login()));
+                    },
+                    child: Text('      Logout'),
+                  )
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
       appBar: AppBar(
         title: Text('Mahasiswa'),
       ),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-           TextField(
-             onChanged: (String str){
-               setState(() {
-                 _nama=str;
-               });
-             },
-             decoration: InputDecoration(
-               icon: Icon(Icons.person),
-               hintText: "nama"
-             ),
-           ),
-           TextField(
-             onChanged: (String str){
-               setState(() {
-                 _nim=str;
-               });
-             },
-             decoration: InputDecoration(
-               icon: Icon(Icons.confirmation_number),
-               hintText: "nim"
-             ),
-           ),
-           StreamBuilder<DocumentSnapshot>(
-             stream: Firestore.instance
-             .collection('users')
-             .document(_dataku)
-             //.where("nim",isEqualTo: "f1b012007")
-             .snapshots(),
+            Padding(
+              padding: const EdgeInsets.all(1.0),
+              child: Icon(
+                Icons.account_circle,
+                size: 150.0,
+                color: Colors.grey,
+              ),
+            ),
+            Divider(
+              color: Colors.black,
+            ),
+            StreamBuilder(
+              stream: Mahasiswa().getDataMahasiswaWhereNIM(nim),
+              builder: (BuildContext context,
+                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (!snapshot.hasData)
+                  return new Container(
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  );
 
-             builder: (BuildContext context,AsyncSnapshot<DocumentSnapshot> snapshot){
-              //  if(!snapshot.hasData)
-              //  return new Container(child: Center(
-              //    child: CircularProgressIndicator(),
-              //  ),);
-
-              //  return new Tasklist(document: snapshot.data.documents,);
-              if(snapshot.hasError){
-                return Text('Error:${snapshot.error}');
-              }
-              switch(snapshot.connectionState){
-                case ConnectionState.waiting: return  Text('loading . . .');
-                default:
-                  return Text(snapshot.data['roles']);
-              }
-             },
-           ),
-           Row(
-             children: <Widget>[
-               IconButton(
-             onPressed: _adddata2,
-             icon: Icon(Icons.add),
-           ),
-           IconButton(
-             onPressed: _editdata,
-             icon: Icon(Icons.edit),
-           ),
-           IconButton(
-             onPressed: _deletedata,
-             icon: Icon(Icons.delete),
-           ),
-             ],
-           )
+                return new TampilData(
+                  document: snapshot.data.documents,
+                );
+              },
+            ),
           ],
         ),
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: _adddata2,
-      //   tooltip: 'Increment',
-      //   child: Icon(Icons.add),
-      // ), 
     );
   }
+
   getUID() async {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  FirebaseUser user = await _auth.currentUser();
-  String uid = user.uid;
-  _dataku = uid;
-   return  uid;
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+    FirebaseUser user = await _auth.currentUser();
+    await Firestore.instance
+        .collection('users')
+        .document('${user.uid}')
+        .get()
+        .then((DocumentSnapshot ds) {
+      setState(() {
+        nim = ds.data['username'];
+      });
+    });
   }
-
-  
-
 }
 
-
-class Tasklist extends StatelessWidget {
-  Tasklist({this.document});
+class TampilData extends StatelessWidget {
+  TampilData({this.document});
   final List<DocumentSnapshot> document;
   @override
   Widget build(BuildContext context) {
@@ -148,45 +155,93 @@ class Tasklist extends StatelessWidget {
       children: <Widget>[
         Expanded(
           child: SizedBox(
-            height: 200.0,
+            height: 400.0,
             child: ListView.builder(
-                    itemCount: document.length,
-                    itemBuilder: (BuildContext context, int i){
-                      String nama = document[i].data["nama"].toString();
-                      String nim = document[i].data["nim"].toString();
-                      
+              itemCount: document.length,
+              itemBuilder: (BuildContext context, int i) {
+                String nama = document[i].data["nama"].toString();
+                String nim = document[i].data["nim"].toString();
+                String thn_masuk = document[i].data["thn_masuk"].toString();
 
-
-                      return Column(
-                        children: <Widget>[
-                          Text(nama),
-                          Text(nim),
-                          IconButton(
-                            icon: Icon(Icons.edit),
-                            onPressed: (){
-                              Navigator.of(context).push(MaterialPageRoute(
-                                builder: (BuildContext context)=> FormEditDataMahasiswa(
-                                  nama: document[i].data['nama'],
-                                  nim: document[i].data['nim'],
-                                  index:document[i].reference,
-                                )
-                              ));
-                            },
-                          ),
-                          IconButton(
-                            icon: Icon(Icons.delete),
-                            onPressed: (){
-                              Firestore.instance.runTransaction((Transaction transaction)async{
-                                DocumentSnapshot snapshot = 
-                                await transaction.get(document[i].reference);
-                                await transaction.delete(snapshot.reference);
-                              });
-                            },
-                          )
-                        ],
-                      );
-                    },
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(left:39.0 ,bottom:18.0 ),
+                        child: Row(
+                          children: <Widget>[
+                            Text('Nama'),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 38.0, right: 5.0),
+                              child: Text(':'),
+                            ),
+                            Text(nama),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left:39.0 ,bottom:18.0 ),
+                        child: Row(
+                          children: <Widget>[
+                            Text('NIM'),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 50.0, right: 5.0),
+                              child: Text(':'),
+                            ),
+                            Text(nim),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left:39.0 ,bottom:18.0 ),
+                        child: Row(
+                          children: <Widget>[
+                            Text('Angkatan'),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 18.0, right: 5.0),
+                              child: Text(':'),
+                            ),
+                            Text(thn_masuk),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left:39.0 ,bottom:18.0 ),
+                        child: Row(
+                          children: <Widget>[
+                            Text('IPK'),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 56.0, right: 5.0),
+                              child: Text(':'),
+                            ),
+                            Text(''),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left:39.0 ,bottom:18.0 ),
+                        child: Row(
+                          children: <Widget>[
+                            Text('Jumlah SKS'),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 3.0, right: 5.0),
+                              child: Text(':'),
+                            ),
+                            Text(''),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
+                );
+              },
+            ),
           ),
         )
       ],

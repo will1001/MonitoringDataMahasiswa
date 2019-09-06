@@ -7,4 +7,11 @@ class MataKuliah{
               .collection('matakuliah')
               .snapshots();
     }
+    
+    getDataMataKuliahWhereKodeMk(String kode_mk){
+      return Firestore.instance
+              .collection('matakuliah')
+              .where("kode_mk", isEqualTo: kode_mk)
+              .snapshots();
+    }
 }

@@ -1,6 +1,8 @@
 import 'package:data_monitoring_mahasiswa/Adminarea/DataKodeNilai.dart';
 import 'package:data_monitoring_mahasiswa/Adminarea/DataKodeSekolah.dart';
 import 'package:data_monitoring_mahasiswa/Adminarea/DataPengampu.dart';
+import 'package:data_monitoring_mahasiswa/Adminarea/DataUsers.dart';
+import 'package:data_monitoring_mahasiswa/Login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'DataBidangKeahlian.dart';
@@ -31,12 +33,34 @@ String _dataku;
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('admin'),
+        leading: IconButton(
+            icon: Icon(Icons.lock_open),
+            color: Colors.white,
+            onPressed: (){
+              Navigator.of(context).push(MaterialPageRoute(
+                          builder: (c) => Login()));
+            },
+          ),
+        title: Padding(
+          padding: const EdgeInsets.only(right: 58.0),
+          child: Center(child: Text('Admin')),
+        ),
+        
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+           RaisedButton(
+             child: Text('Data Users'),
+             color: Colors.red,
+             splashColor: Colors.blue,
+             onPressed: (){
+               Navigator.of(context).push(
+                  MaterialPageRoute(builder: (c) => DataUsers())
+                );
+             },
+           ),
            RaisedButton(
              child: Text('Data mahasiswa'),
              color: Colors.red,
